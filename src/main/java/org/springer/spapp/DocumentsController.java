@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("document")
 public class DocumentsController {
 	
+	final static String DOCUMENTS_PAGE = "documents";
+	
 	@Autowired
 	ServiceWatermark serviceWatermark;
 	
@@ -30,9 +32,9 @@ public class DocumentsController {
 	 * @return list of document
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String home(Model model) {
+	public String documents(Model model) {
 		model.addAttribute("documents", serviceWatermark.findAll());
-		return "documents";
+		return DocumentsController.DOCUMENTS_PAGE;
 	}
 
 }

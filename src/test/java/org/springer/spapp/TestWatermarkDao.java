@@ -2,7 +2,6 @@ package org.springer.spapp;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springer.dao.impl.DocumentDAOImpl;
@@ -11,6 +10,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springer.model.Document;
 
+/**
+ * Test dao implementation
+ * @author ogarkov_sa
+ * @since 08.01.2014
+ *
+ */
 
 @ContextConfiguration(locations = {"/root-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)

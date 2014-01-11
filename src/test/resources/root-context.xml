@@ -14,6 +14,7 @@
 	
 		<bean id="documentDAO" class="org.springer.dao.impl.DocumentDAOImpl"/>					
  	    <bean id="serviceWatermark" class="org.springer.service.ServiceWatermark"/>
+ 	      <bean id="documentsController" class="org.springer.spapp.DocumentsController"/>
  	
  		<jdbc:embedded-database id="dataSource" type="H2"/>
 		
