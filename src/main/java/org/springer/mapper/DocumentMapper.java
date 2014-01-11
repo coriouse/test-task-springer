@@ -19,7 +19,8 @@ public class DocumentMapper implements RowMapper<Document> {
 			document.setId(resultSet.getLong("id"));
 			document.setAuthor(resultSet.getString("author"));	
 			document.setTitle(resultSet.getString("title"));
-			document.setWatermark(resultSet.getString("watermark"));				
+			document.setWatermark(resultSet.getString("watermark"));	
+			document.setType(resultSet.getString("content"));
 		return document;
 	}
 }

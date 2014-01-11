@@ -25,5 +25,53 @@
 		 <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
       		<property name="dataSource"  ref="dataSource" />    
    		</bean>
+   		<bean id="query" class="java.util.HashMap" >
+    		<constructor-arg>
+        		<map key-type="java.lang.String" value-type="java.lang.String">
+ 	    	     		     <entry key="document"> 	    	     		     
+	    	    		    	 <value>
+	    	    		    		 <![CDATA[ select d.id, d.author, d.title, d.watermark, t.content from t_document d inner join t_type_content t on d.type_content=t.id where d.id=? ]]>
+	    	    		    	 </value>
+    	    		    	 </entry>
+    	    		    	 <entry key="documents">    	    		    	 
+    	    		    	 <value>
+    	    		    	 		<![CDATA[ select d.id, d.author, d.title, d.watermark, t.content from t_document d inner join t_type_content t on d.type_content=t.id ]]>
+    	    		    	 </value>
+    	    		    	 
+    	    		    	 </entry>
+    	    		    	 <entry key="book"> 
+    	    		    	 
+    	    		    	 <value> <![CDATA[ 
+    	    		    	 select  c.content, d.title, d.author, t.topic from t_document d inner join t_type_content c on d.type_content = c.id   
+						 				 inner join  t_document_topic dt on dt.document = d.id  
+						  				 inner join t_topic t on dt.topic=t.id where c.content =? and d.id=?
+    	    		    	     	    		    	  ]]>
+    	    		    	     	    		    	  
+    	    		    	 </value>    	    		    	  
+    	    		    	 </entry>    	    		    	  
+    	    		    	 <entry key="journal">
+    	    		    	 <value>
+    	    		    	  <![CDATA[ 
+    	    		    							 select  c.content, d.title, d.author from  
+						 							 t_document d inner join t_type_content c on d.type_content = c.id   
+						 							 where c.content = ? and d.id= ?    	    		    	 
+    	    		    	  ]]>
+    	    		    	  </value>
+    	    		    	  
+    	    		    	  
+    	    		    	  </entry>
+    	    		    	  
+    	    		    	  <entry key="updateWatermark">
+    	    		    	 <value>
+    	    		    	  <![CDATA[ 
+    	    		    							update t_document t set t.watermark = ?  where t.id = ?    	    		    	 
+    	    		    	  ]]>
+    	    		    	  </value>
+    	    		    	  </entry>
+    	    		    	  
+    	    		    	 
+        		</map>
+  		  	</constructor-arg>
+		</bean>
 		
 </beans>

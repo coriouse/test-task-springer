@@ -2,6 +2,10 @@ package org.springer.dao.impl;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springer.dao.DocumentDAO;
@@ -12,9 +16,11 @@ import org.springer.model.Book;
 import org.springer.model.Journal;
 import org.springer.model.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
 import com.google.gson.Gson;
 
 /**
@@ -31,15 +37,18 @@ public class DocumentDAOImpl implements DocumentDAO {
 	@Autowired
 	JdbcTemplate jdbcTemplate; 
 	
+	@Resource
+	@Qualifier("query")
+	private Map<String, String> query;
+	
 	/**
 	 * method get list of Documents
 	 * @author ogarkov_sa
 	 * @since 08.01.2014
 	 */
 	public List<Document> findAll() {
-		try {
-			String sql = "select id, author, title, watermark from t_document";
-			List<Document> list = jdbcTemplate.query(sql,  new DocumentMapper());
+		try {			
+			List<Document> list = jdbcTemplate.query(query.get("documents"),  new DocumentMapper());
 			if(list != null && list.size() > 0) {
 				return list;
 			} else {
@@ -72,12 +81,9 @@ public class DocumentDAOImpl implements DocumentDAO {
 	 */
 	private Integer generateWaterMark(Long id, String type) {
 		Document result = null;
-		if("book".equals(type)) {
-			String sql = "select  c.content, d.title, d.author, t.topic from t_document d inner join t_type_content c on d.type_content = c.id " +  
-						" inner join  t_document_topic dt on dt.document = d.id "+ 
-						" inner join t_topic t on dt.topic=t.id where c.content =? and d.id=? ";
+		if(type.equalsIgnoreCase(TypeDocument.BOOK.toString())) {
 			try{
-				result = (Book)jdbcTemplate.queryForObject(sql, new Object[]{type, id}, new BookMapper());
+				result = (Book)jdbcTemplate.queryForObject(query.get(type), new Object[]{type, id}, new BookMapper());
 				Gson g = new Gson();
 				logger.info("Generate Book="+g.toJson(result));
 				result.setWatermark(g.toJson(result));
@@ -86,12 +92,10 @@ public class DocumentDAOImpl implements DocumentDAO {
 				logger.info("Book exception:", e );
 				return 1;
 			}
-		} else if("journal".equals(type)) {
-			String sql = "select  c.content, d.title, d.author from "+ 
-						 " t_document d inner join t_type_content c on d.type_content = c.id "+  
-						 " where c.content = ? and d.id= ?"; 
+		} else if(type.equalsIgnoreCase(TypeDocument.JOURNAL.toString())) {
+			
 			try{
-				result = (Journal)jdbcTemplate.queryForObject(sql, new Object[]{type, id}, new JournalMapper());
+				result = (Journal)jdbcTemplate.queryForObject(query.get(type), new Object[]{type, id}, new JournalMapper());
 				Gson g = new Gson();
 				logger.info("Generate Journal="+g.toJson(result));
 				result.setWatermark(g.toJson(result));
@@ -112,7 +116,7 @@ public class DocumentDAOImpl implements DocumentDAO {
 	 * @throws Exception
 	 */
 	private void save(Document document, Long id) throws Exception {		
-		jdbcTemplate.update("update t_document t set t.watermark = ?  where t.id = ?", document.getWatermark(), id);
+		jdbcTemplate.update(query.get("updateWatermark"), document.getWatermark(), id);
 	}
 	
 	
@@ -125,9 +129,8 @@ public class DocumentDAOImpl implements DocumentDAO {
 	 * 
 	 */
 	public Document getDocumentById(Long id) {
-		try {
-			String sql = "select id, author, title, watermark from t_document where id=?";
-			Document result = (Document)jdbcTemplate.queryForObject(sql, new Object[]{id}, new DocumentMapper());
+		try {			
+			Document result = (Document)jdbcTemplate.queryForObject(query.get("document"), new Object[]{id}, new DocumentMapper());
 			return result;
 		} catch (EmptyResultDataAccessException e) {
 			return null;

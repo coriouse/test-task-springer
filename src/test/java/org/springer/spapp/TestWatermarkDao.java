@@ -9,6 +9,7 @@ import org.springer.dao.impl.DocumentDAOImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springer.model.Document;
 
 
 @ContextConfiguration(locations = {"/root-context.xml"})
@@ -25,9 +26,20 @@ public class TestWatermarkDao {
 	 * 
 	 * 
 	 */
-	@Ignore
+	@Test
 	public void testFindAll() {		
 		assertTrue(documentDAO.findAll().size() > 0);
+		
+		Document doc = null;
+		for(Document d : documentDAO.findAll()) {
+			if(d.getId() == 1) {
+				doc = d;
+				break;
+			}
+		}	
+		assertEquals("The Dark Code", doc.getTitle());
+		assertEquals("Bruce Wayne", doc.getAuthor());
+		assertEquals("book",doc.getType());
 	}
 	
 	//Book test

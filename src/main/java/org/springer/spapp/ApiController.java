@@ -41,7 +41,7 @@ public class ApiController {
 	 * @param id - document id
 	 * @return code
 	 */
-	 @RequestMapping(value = "/put/{id}/{type}", method = RequestMethod.PUT)
+	 @RequestMapping(value = "put/{id}/{type}", method = RequestMethod.PUT)
 	 @ResponseBody
 	 public Integer setWatermarkById(@PathVariable Long id, @PathVariable String type) {
 		 return serviceWatermark.updateDocument(id, type);
@@ -73,7 +73,7 @@ public class ApiController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String home(Model model) {
 		model.addAttribute("documents", serviceWatermark.findAll());
-		return "home";
+		return "documents";
 	}
 	
 	
