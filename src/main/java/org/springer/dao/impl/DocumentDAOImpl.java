@@ -74,37 +74,33 @@ public class DocumentDAOImpl implements DocumentDAO {
 	}
 	
 	/**
-	 * generate 
+	 * generate of watermark
 	 * @param id
 	 * @param type
 	 * @return
 	 */
 	private Integer generateWaterMark(Long id, String type) {
-		Document result = null;
-		if(type.equalsIgnoreCase(TypeDocument.BOOK.toString())) {
+		Document result = null;		
 			try{
-				result = (Book)jdbcTemplate.queryForObject(query.get(type), new Object[]{type, id}, new BookMapper());
-				Gson g = new Gson();
-				logger.info("Generate Book="+g.toJson(result));
-				result.setWatermark(g.toJson(result));
-				save(result,id);
+				if(type.equalsIgnoreCase(TypeDocument.BOOK.toString())) {
+					result = (Book)jdbcTemplate.queryForObject(query.get(type), new Object[]{type, id}, new BookMapper());
+				} else if(type.equalsIgnoreCase(TypeDocument.JOURNAL.toString())) {
+					result = (Journal)jdbcTemplate.queryForObject(query.get(type), new Object[]{type, id}, new JournalMapper());
+				}
 			} catch(Exception e) {
-				logger.info("Book exception:", e );
+				logger.info("Generator of watermark exception:", e );
 				return 1;
-			}
-		} else if(type.equalsIgnoreCase(TypeDocument.JOURNAL.toString())) {
-			
-			try{
-				result = (Journal)jdbcTemplate.queryForObject(query.get(type), new Object[]{type, id}, new JournalMapper());
-				Gson g = new Gson();
-				logger.info("Generate Journal="+g.toJson(result));
-				result.setWatermark(g.toJson(result));
-				save(result, id);
+			}	
+			Gson g = new Gson();
+			logger.info("Generate="+g.toJson(result));
+			result.setId(id);
+			result.setWatermark(g.toJson(result));
+			try {
+				save(result);
 			} catch(Exception e) {
-				logger.info("Journal exception:", e );
+				logger.info("Save of watermark exception:", e );
 				return 1;
-			}			
-		}		
+			}	
 		return 0;		
 	}
 	
@@ -115,8 +111,8 @@ public class DocumentDAOImpl implements DocumentDAO {
 	 * @param document
 	 * @throws Exception
 	 */
-	private void save(Document document, Long id) throws Exception {		
-		jdbcTemplate.update(query.get("updateWatermark"), document.getWatermark(), id);
+	private void save(Document document) throws Exception {		
+		jdbcTemplate.update(query.get("updateWatermark"), document.getWatermark(), document.getId());
 	}
 	
 	
