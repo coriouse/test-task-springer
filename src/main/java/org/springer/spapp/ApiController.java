@@ -60,25 +60,5 @@ public class ApiController {
 	 public String getStatus(@PathVariable Long id) {		
 		 return serviceWatermark.getDocumentById(id).getWatermark() ;
 	 }
-	 
-	
-	
-	/**
-	 * List of documents
-	 * @author ogarkov_sa
-	 * @since 08.01.2014 
-	 * @param model
-	 * @return list of document
-	 */
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String home(Model model) {
-		model.addAttribute("documents", serviceWatermark.findAll());
-		return "documents";
-	}
-	
-	
-	
-	
-	
-	
+			
 }
