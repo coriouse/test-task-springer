@@ -56,9 +56,9 @@ public class TestWatermarkDao {
 		//system return code 0-ok, 1-server error,  exception intercept logger and write to file or concole
 		Integer code = documentDAO.updateDocument(id, type);
 		//ok
-		assertTrue( 0 == code);		
-		assertNotNull( documentDAO.getDocumentById(id).getWatermark());
-	
+		assertTrue( 0 == code);	
+		String waterMark = documentDAO.getDocumentById(id).getWatermark();
+		assertNotNull(waterMark);	
 	}
 	
 	//Journal test

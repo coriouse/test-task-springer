@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Test mvc document 
  * @author ogarkov_sa
- * @since 08.01.2014
+ * @since 11.01.2014
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)

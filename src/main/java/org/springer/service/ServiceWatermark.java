@@ -36,6 +36,15 @@ public class ServiceWatermark {
 		return documentDAO.getDocumentById(id);
 	}
 	
+	public Integer cleanWatermark(Long id) {
+		try {
+			documentDAO.cleanWatermark(id);
+		} catch(Exception e) {
+			return 1;
+		}	
+		return 0;
+	}
+	
 	
 
 }

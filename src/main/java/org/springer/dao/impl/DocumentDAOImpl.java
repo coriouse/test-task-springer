@@ -41,11 +41,7 @@ public class DocumentDAOImpl implements DocumentDAO {
 	@Qualifier("query")
 	private Map<String, String> query;
 	
-	/**
-	 * method get list of Documents
-	 * @author ogarkov_sa
-	 * @since 08.01.2014
-	 */
+
 	public List<Document> findAll() {
 		try {			
 			List<Document> list = jdbcTemplate.query(query.get("documents"),  new DocumentMapper());
@@ -61,14 +57,7 @@ public class DocumentDAOImpl implements DocumentDAO {
 	}
 	
 	
-	/**
-	 * method set watermark to document
-	 * @author ogarkov_sa
-	 * @since 08.01.2014
-	 * @param id - document
-	 * @return code 0 - watermark is , 1 - problem with server (i think it's primitive decision)
-	 * 
-	 */
+
 	public Integer updateDocument(Long id, String type) {
 			return  generateWaterMark(id, type);
 	}
@@ -81,20 +70,31 @@ public class DocumentDAOImpl implements DocumentDAO {
 	 */
 	private Integer generateWaterMark(Long id, String type) {
 		Document result = null;		
+		if(id == null || type == null) {
+			logger.info("id or typw is null: id ="+id+", type="+type  );
+			return 1;
+		}
 			try{
 				if(type.equalsIgnoreCase(TypeDocument.BOOK.toString())) {
 					result = (Book)jdbcTemplate.queryForObject(query.get(type), new Object[]{type, id}, new BookMapper());
 				} else if(type.equalsIgnoreCase(TypeDocument.JOURNAL.toString())) {
 					result = (Journal)jdbcTemplate.queryForObject(query.get(type), new Object[]{type, id}, new JournalMapper());
+				} else {
+					logger.info("Document type is wrong:"+type );
+					return 1;
 				}
+			} catch (EmptyResultDataAccessException e) {		
+				logger.info("Document is not find:"+id );
+				return 1;
 			} catch(Exception e) {
 				logger.info("Generator of watermark exception:", e );
 				return 1;
 			}	
+			
 			Gson g = new Gson();
-			logger.info("Generate="+g.toJson(result));
-			result.setId(id);
+			logger.info("Generate="+g.toJson(result));			
 			result.setWatermark(g.toJson(result));
+			result.setId(id);
 			try {
 				save(result);
 			} catch(Exception e) {
@@ -115,20 +115,15 @@ public class DocumentDAOImpl implements DocumentDAO {
 		jdbcTemplate.update(query.get("updateWatermark"), document.getWatermark(), document.getId());
 	}
 	
+	public void cleanWatermark(Long id) {
+		jdbcTemplate.update(query.get("updateWatermark"), null, id);
+	}
 	
-	/**
-	 * get document by Id
-	 * @author ogarkov_sa
-	 * @since 08.01.2014
-	 * @param id - document
-	 * @return Document
-	 * 
-	 */
-	public Document getDocumentById(Long id) {
+	public Document getDocumentById(Long id) {		
 		try {			
 			Document result = (Document)jdbcTemplate.queryForObject(query.get("document"), new Object[]{id}, new DocumentMapper());
 			return result;
-		} catch (EmptyResultDataAccessException e) {
+		} catch (EmptyResultDataAccessException e) {		
 			return null;
 		} catch(Exception e) {
 			logger.info("get Document by id:",e);

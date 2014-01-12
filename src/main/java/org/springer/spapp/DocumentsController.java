@@ -1,5 +1,7 @@
 package org.springer.spapp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springer.service.ServiceWatermark;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,8 @@ public class DocumentsController {
 	
 	final static String DOCUMENTS_PAGE = "documents";
 	
+	private static final Logger logger = LoggerFactory.getLogger(DocumentsController.class);
+	
 	@Autowired
 	ServiceWatermark serviceWatermark;
 	
@@ -34,6 +38,7 @@ public class DocumentsController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String documents(Model model) {
 		model.addAttribute("documents", serviceWatermark.findAll());
+		logger.debug("documents="+serviceWatermark.findAll());
 		return DocumentsController.DOCUMENTS_PAGE;
 	}
 

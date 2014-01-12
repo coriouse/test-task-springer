@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springer.model.Document;
 import org.springer.service.ServiceWatermark;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,7 +45,9 @@ public class ApiController {
 	 @RequestMapping(value = "put/{id}/{type}", method = RequestMethod.PUT)
 	 @ResponseBody
 	 public Integer setWatermarkById(@PathVariable Long id, @PathVariable String type) {
-		 return serviceWatermark.updateDocument(id, type);
+		 Integer code = serviceWatermark.updateDocument(id, type);
+		 logger.debug("code:"+code);
+		 return code;
 	 }
 
 	/**
@@ -57,8 +60,25 @@ public class ApiController {
 	 */
 	 @RequestMapping(value = "status/{id}", method = RequestMethod.GET)
 	 @ResponseBody
-	 public String getStatus(@PathVariable Long id) {		
+	 public String getStatus(@PathVariable Long id) {
+		 Document document = serviceWatermark.getDocumentById(id);
+		 logger.debug("watermark:"+document.getWatermark());
 		 return serviceWatermark.getDocumentById(id).getWatermark() ;
 	 }
+	 
+	 /**Method clean watermark by id 
+	  * @author ogarkov_as
+	  * @since 12.01.2014 
+	  * @param id - document id
+	  * @return code
+	  */
+	 @RequestMapping(value = "clean/{id}", method = RequestMethod.DELETE)
+	 @ResponseBody
+	 public Integer cleanWatermark(@PathVariable Long id) {
+		 logger.debug("clean watermark by id:"+id);
+		 Integer code = serviceWatermark.cleanWatermark(id);
+		 return code;		 
+	 }
+	 
 			
 }
