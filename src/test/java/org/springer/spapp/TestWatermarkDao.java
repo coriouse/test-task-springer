@@ -16,13 +16,7 @@ import org.springer.model.Document;
  * @since 08.01.2014
  *
  */
-
-@ContextConfiguration(locations = {"/root-context.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
-public class TestWatermarkDao {
-
-	@Autowired
-	DocumentDAOImpl documentDAO;
+public class TestWatermarkDao extends TestBase {
 	
 	/**
 	 * Test of get all document

@@ -23,11 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
  * @since 11.01.2014
  *
  */
-
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/root-context.xml","/servlet-context.xml"})
-@WebAppConfiguration("classpath:servlet-context.xml")
-public class TestApiRestMvc {
+public class TestApiRestMvc  extends TestBase  {
 	
 	 ServiceWatermark serviceWatermark;
 		

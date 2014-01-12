@@ -2,12 +2,15 @@ package org.springer.spapp;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springer.model.Document;
@@ -19,6 +22,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.support.BindingAwareModelMap;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -30,10 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @since 11.01.2014
  *
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/root-context.xml","/servlet-context.xml"})
-@WebAppConfiguration("classpath:servlet-context.xml")
-public class TestDocumentMvc {
+public class TestDocumentMvc extends TestBase {
 	
 	 ServiceWatermark serviceWatermark;
 	
